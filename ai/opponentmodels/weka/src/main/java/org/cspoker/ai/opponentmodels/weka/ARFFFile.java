@@ -99,6 +99,7 @@ public class ARFFFile {
 	public Classifier createModel(String fileName, String attribute, String[] rmAttributes) throws Exception {
 //		System.out.println("Creating model for " + player + name);
 		DataSource source = new DataSource(path + player + name);
+//		System.out.println(source + " > " + path + player + name);
 	    Instances data = source.getDataSet();
 	    if (rmAttributes.length > 0) {
 		    String[] optionsDel = new String[2];

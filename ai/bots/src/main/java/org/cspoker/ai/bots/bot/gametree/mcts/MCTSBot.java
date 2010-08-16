@@ -61,6 +61,10 @@ public class MCTSBot extends AbstractBot {
 		this.MCTSlistenerFactories = MCTSlisteners;
 		this.decisionTime = decisionTime;
 	}
+	
+	public Config getConfig() {
+		return config;
+	}
 
 	@Override
 	public void doNextAction() throws RemoteException, IllegalActionException {

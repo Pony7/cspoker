@@ -21,8 +21,11 @@ import org.cspoker.ai.bots.util.RunningStats;
 import org.cspoker.common.api.lobby.holdemtable.holdemplayer.listener.HoldemPlayerListener;
 import org.cspoker.common.api.lobby.holdemtable.listener.HoldemTableListener;
 import org.cspoker.common.api.shared.exception.IllegalActionException;
+import org.cspoker.common.elements.player.PlayerId;
 
 public interface Bot extends HoldemTableListener, HoldemPlayerListener{
+	
+	PlayerId getId();
 
 	void doNextAction() throws RemoteException, IllegalActionException;
 

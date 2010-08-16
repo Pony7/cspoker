@@ -34,15 +34,20 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 
 	private final static Logger logger = Logger.getLogger(ARFFPropositionalizer.class);
 	
-	double truePositive = 0.0;
-	double trueNegative = 0.0;
-	double falsePositive = 0.0;
-	double falseNegative = 0.0;
+	private class AccuracyData {
+		double truePositive = 0.0;
+		double trueNegative = 0.0;
+		double falsePositive = 0.0;
+		double falseNegative = 0.0;
+	}
+	
+	private HashMap<PlayerId, AccuracyData> accuracyData;
 	
 	public ActionTrackingVisitor(OpponentModel opponentModel, PlayerId bot) {
 		super(opponentModel);
 		try {
 			this.propz = new ARFFPropositionalizer(bot);
+			accuracyData =  new HashMap<PlayerId, AccuracyData>();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,12 +66,14 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 	}
 	
 	public void printAccuracy() {
-		System.out.print(//" Accuracy : " + 
-				(trueNegative + truePositive) / 
-				(trueNegative + truePositive + falseNegative + falsePositive));
-		System.out.println("\t-\t" + //" Precision : " + 
-				(truePositive) / 
-				(truePositive + falsePositive));
+		for (PlayerId id : accuracyData.keySet()) {
+			AccuracyData data = accuracyData.get(id);
+			System.out.print(//" Accuracy : " + 
+				(data.trueNegative + data.truePositive) / 
+				(data.trueNegative + data.truePositive + data.falseNegative + data.falsePositive));
+			System.out.print("\t");
+		}
+		System.out.println("");
 	}
 	
 	private Prediction getProbability(GameState gameState) {
@@ -190,26 +197,30 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		}
 		
 //		System.out.println(">----------------------------");
-		for (Class<?> c : probs.keySet()) {
-			if (c.equals(cProb))
-				assimilatePrediction(new Prediction(action, 1, probs.get(cProb)));
-			else
-				assimilatePrediction(new Prediction(actions.get(c), 0, probs.get(c)));
-		}
+//		for (Class<?> c : probs.keySet()) {
+//			if (c.equals(cProb))
+//				assimilatePrediction(new Prediction(action, 1, probs.get(cProb)));
+//			else
+//				assimilatePrediction(new Prediction(actions.get(c), 0, probs.get(c)));
+//		}
 //		System.out.println("-----------------------------<");
-		printAccuracy();
 		
 		return new Prediction(action, 1, probs.get(cProb));
 	}
 	
-	private void assimilatePrediction(Prediction p) {
+	private void assimilatePrediction(PlayerId id, Prediction p) {
 		if (p == null || p.getAction() == null) return;
 //		System.out.println(p + ", TP: " + p.getTruePositive() + ", TN: " + p.getTrueNegative() 
 //			+ ", FP: " + p.getFalsePositive() + ", FN: " + p.getFalseNegative());
-		truePositive += p.getTruePositive();
-		trueNegative += p.getTrueNegative();
-		falsePositive += p.getFalsePositive();
-		falseNegative += p.getFalseNegative();
+		if (!accuracyData.containsKey(id)) 
+			accuracyData.put(id, new AccuracyData());
+		
+		AccuracyData data = accuracyData.get(id);
+		data.truePositive += p.getTruePositive();
+		data.trueNegative += p.getTrueNegative();
+		data.falsePositive += p.getFalsePositive();
+		data.falseNegative += p.getFalseNegative();
+		printAccuracy();
 	}
 	
 	@Override
@@ -217,7 +228,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(callState);
 		if (node != null && !callState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(callState);
-//			assimilatePrediction(p);
+			assimilatePrediction(callState.getNextToAct(), p);
 			logger.trace(getPlayerName(callState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(callState) + " CallState");
@@ -230,7 +241,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(raiseState);
 		if (node != null && !raiseState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(raiseState,raiseState.getLargestBet());
-//			assimilatePrediction(p);
+			assimilatePrediction(raiseState.getNextToAct(), p);
 			logger.trace(getPlayerName(raiseState) +
 				" Raise " + Util.parseDollars(raiseState.getLargestBet()) + 
 				" - with <" + p + ">");
@@ -245,7 +256,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(foldState);
 		if (node != null && !foldState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(foldState);
-//			assimilatePrediction(p);
+			assimilatePrediction(foldState.getNextToAct(), p);
 			logger.trace(getPlayerName(foldState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(foldState) + " FoldState");
@@ -258,7 +269,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(checkState);
 		if (node != null && !checkState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(checkState);
-//			assimilatePrediction(p);
+			assimilatePrediction(checkState.getNextToAct(), p);
 			logger.trace(getPlayerName(checkState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(checkState) + " CheckState");
@@ -271,7 +282,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(betState);
 		if (node != null && !betState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(betState, betState.getEvent().getAmount());
-//			assimilatePrediction(p);
+			assimilatePrediction(betState.getNextToAct(), p);
 			logger.trace(getPlayerName(betState) +
 				" Bet " + Util.parseDollars(betState.getEvent().getAmount()) + 
 				" - with <" + p + ">");
@@ -286,7 +297,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		InnerNode node = getNode(allInState);
 		if (node != null && !allInState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(allInState, allInState.getEvent().getMovedAmount());
-//			assimilatePrediction(p);
+			assimilatePrediction(allInState.getNextToAct(), p);
 			logger.trace(getPlayerName(allInState) +
 				" All-in " + Util.parseDollars(allInState.getEvent().getMovedAmount()) + 
 				" - with <" + p + ">");

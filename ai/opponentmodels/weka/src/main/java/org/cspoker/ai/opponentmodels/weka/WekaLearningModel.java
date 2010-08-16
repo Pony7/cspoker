@@ -112,6 +112,13 @@ public class WekaLearningModel implements OpponentModel {
 		}
 		return model;
 	}
+	
+	public ARFFPlayer getPlayer(PlayerId actor) {
+		if (config.useOnlineLearning() && !actor.equals(bot)) {
+			return actionTrackingVisitor.getPropz().getARFF(actor);
+		} else
+			return null;
+	}
 
 	@Override
 	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState, PlayerId actor) {
