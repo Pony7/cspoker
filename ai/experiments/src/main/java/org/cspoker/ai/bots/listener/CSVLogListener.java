@@ -17,8 +17,6 @@ package org.cspoker.ai.bots.listener;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.BotRunner;
@@ -27,7 +25,6 @@ import org.cspoker.ai.bots.bot.gametree.mcts.nodes.Config;
 import org.cspoker.ai.bots.util.RunningStats;
 import org.cspoker.ai.opponentmodels.weka.ARFFPlayer;
 import org.cspoker.ai.opponentmodels.weka.WekaLearningModel;
-import org.cspoker.ai.opponentmodels.weka.WekaRegressionModel;
 import org.cspoker.common.elements.player.PlayerId;
 
 public class CSVLogListener extends DealCountingListener {
@@ -58,7 +55,7 @@ public class CSVLogListener extends DealCountingListener {
 			throw new IllegalStateException(e);
 		}
 	}
-
+	
 	@Override
 	public void onNewDeal() {
 		int deals = getDeals();
@@ -76,10 +73,13 @@ public class CSVLogListener extends DealCountingListener {
 				}
 				for (int i = 0; i < runner.nbPlayersPerGame; i++) {
 					try {
-						if (modelCreated(runner.getBot(i).getId()))
-							file.write("\tMODELCREATED");
-						else
-							file.write("\t");
+						// 1000 & -1000 creates vertical line in graphs
+						// to indicate where new model was learned
+						if (modelCreated(runner.getBot(i).getId())) {
+							file.write("\t-1000");
+						} else
+							file.write("\t1000");							
+						file.write("\t"+getAccuracy(runner.getBot(i).getId()));
 						RunningStats profit = runner.getBot(i).getProfit();
 						int smallBet = runner.getConfig().getSmallBet();
 						double mean = profit.getMean() / smallBet;
@@ -129,10 +129,23 @@ public class CSVLogListener extends DealCountingListener {
 			Config config = bot.getConfig();
 			WekaLearningModel model = (WekaLearningModel) config.getModel();
 			ARFFPlayer player = model.getPlayer(actor);
-			return player.learningAllowed();
+			return player.modelCreated();
 		} catch (Exception e) {
 			System.err.println(e);
 			return false;
+		}
+	}
+	
+	private double getAccuracy(PlayerId actor) {
+		try {
+			MCTSBot bot = getLearningMCTSBot();
+			if (bot.getId().equals(actor)) return 0.0;
+			Config config = bot.getConfig();
+			WekaLearningModel model = (WekaLearningModel) config.getModel();
+			return model.getPlayerAccuracy(actor);
+		} catch (Exception e) {
+			System.err.println(e);
+			return 0.0;
 		}
 	}
 

@@ -68,7 +68,7 @@ public class BotRunner implements LobbyListener {
 	private static final TableConfiguration config = new TableConfiguration(100,
 			0, false, true, true,0);
 
-	public static final int nbGamesPerConfrontation = 2000;
+	public static final int nbGamesPerConfrontation = 2001;
 	public static final int reportInterval = 1;	
 	public final int nbExperiments = 1;
 	
@@ -107,7 +107,7 @@ public class BotRunner implements LobbyListener {
 	public static void create(RemoteCSPokerServer cspokerServer) {	
 		kullbackLeibler = new KullbackLeiblerListener(reportInterval); 	
 //		new BotRunner(cspokerServer, "bucketSampler0.01VsRulebots");
-		new BotRunner(cspokerServer, "CardBotAccuracy2", getBots());
+		new BotRunner(cspokerServer, "NaiveBotsAccuracy2", getBots());
 	}
 	
 	public static BotFactory[] getBots() {
@@ -124,7 +124,7 @@ public class BotRunner implements LobbyListener {
 			
 			WekaOptions configPersist = new WekaOptions();
 			configPersist.setContinuousLearning(false);
-			configPersist.setModelCreationTreshold(2000);
+			configPersist.setModelCreationTreshold(3000);
 			configPersist.setContinueAfterCreation(false);
 			
 			Sampler s = new BucketSampler(0.01);
