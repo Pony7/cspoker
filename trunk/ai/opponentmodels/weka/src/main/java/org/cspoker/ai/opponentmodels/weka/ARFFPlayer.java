@@ -107,6 +107,10 @@ public class ARFFPlayer {
 				(!modelCreated && (writeCounter >= config.modelCreationTreshold()));
 	}
 	
+	public boolean modelCreated() {
+		return modelCreated;
+	}
+	
 	public void writePreCheckBet(Instance instance) {
 		if (writeAllowed()) {
 			preCheckBetFile.write(instance);

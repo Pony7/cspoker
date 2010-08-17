@@ -68,7 +68,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 	public void printAccuracy() {
 		for (PlayerId id : accuracyData.keySet()) {
 			AccuracyData data = accuracyData.get(id);
-			System.out.print(//" Accuracy : " + 
+			System.out.print(id + "\t" + //" Accuracy : " + 
 				(data.trueNegative + data.truePositive) / 
 				(data.trueNegative + data.truePositive + data.falseNegative + data.falsePositive));
 			System.out.print("\t");
@@ -221,6 +221,15 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		data.falsePositive += p.getFalsePositive();
 		data.falseNegative += p.getFalseNegative();
 		printAccuracy();
+	}
+	
+	public double getAccuracy(PlayerId id) {
+		AccuracyData data = accuracyData.get(id);
+		if (data == null)
+			return 0.0;
+		else
+			return (data.trueNegative + data.truePositive) / 
+					(data.trueNegative + data.truePositive + data.falseNegative + data.falsePositive);
 	}
 	
 	@Override

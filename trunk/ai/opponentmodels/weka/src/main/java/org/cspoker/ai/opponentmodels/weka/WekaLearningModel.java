@@ -119,6 +119,13 @@ public class WekaLearningModel implements OpponentModel {
 		} else
 			return null;
 	}
+	
+	public double getPlayerAccuracy(PlayerId actor) {
+		if (config.useOnlineLearning() && !actor.equals(bot)) {
+			return actionTrackingVisitor.getAccuracy(actor);
+		} else
+			return 0.0;
+	}
 
 	@Override
 	public Pair<Double, Double> getCheckBetProbabilities(GameState gameState, PlayerId actor) {
