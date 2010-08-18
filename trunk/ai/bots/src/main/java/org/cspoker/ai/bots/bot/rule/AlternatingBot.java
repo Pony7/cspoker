@@ -37,19 +37,22 @@ import org.cspoker.common.handeval.stevebrecher.HandEval;
 public class AlternatingBot extends AbstractBot {
 
 	private final static Logger logger = Logger.getLogger(CallBot.class);
+	
+	private long threshold;
 
 	AlternatingBot(PlayerId playerId, TableId tableId, SmartLobbyContext lobby,
-			int buyIn, ExecutorService executor, BotListener... botListeners) {
+			int buyIn, ExecutorService executor, long threshold, BotListener... botListeners) {
 		super(playerId, tableId, lobby, buyIn, executor, botListeners);
+		this.threshold = threshold;
 	}
 	
+	private boolean printed = false;
 	private long nrActions = 0;
-	private final long actionSwitch = 1600;
 	
 	@Override
 	public void doNextAction() {
 		nrActions++;
-		if (nrActions < actionSwitch) {
+		if (nrActions < threshold) {
 			try {
 				playerContext.checkOrCall();
 			} catch (IllegalActionException e) {
@@ -60,8 +63,10 @@ public class AlternatingBot extends AbstractBot {
 				throw new IllegalStateException("Call failed.", e);
 			}
 		} else {
-			if (nrActions == actionSwitch)
+			if (nrActions > threshold && !printed) {
 				System.out.println("=================\nNEW BOT\n====================");
+				printed = true;
+			}
 			GameState gameState = playerContext.getGameState();
 			int deficit = gameState.getDeficit(getId());
 

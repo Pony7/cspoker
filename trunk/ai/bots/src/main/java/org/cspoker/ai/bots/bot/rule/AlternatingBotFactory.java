@@ -28,9 +28,11 @@ import org.cspoker.common.elements.table.TableId;
 public class AlternatingBotFactory implements BotFactory {
 
 	private final String name;
+	private final long threshold;
 
-	public AlternatingBotFactory(String name) {
+	public AlternatingBotFactory(String name, long threshold) {
 		this.name = name;
+		this.threshold = threshold;
 	}
 
 	/**
@@ -43,7 +45,7 @@ public class AlternatingBotFactory implements BotFactory {
 	public Bot createBot(PlayerId playerId, TableId tableId,
 			SmartLobbyContext lobby, int buyIn, ExecutorService executor,
 			BotListener... botListeners) {
-		return new CallBot(playerId, tableId, lobby, buyIn, executor,
+		return new AlternatingBot(playerId, tableId, lobby, buyIn, executor, threshold,
 				botListeners);
 	}
 
