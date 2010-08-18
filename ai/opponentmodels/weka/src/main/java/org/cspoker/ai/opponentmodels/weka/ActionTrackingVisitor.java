@@ -316,16 +316,18 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 			Prediction p = getProbability(allInState, allInState.getEvent().getMovedAmount());
 			assimilatePrediction(allInState.getNextToAct(), p);
 			
-			if (p.getAction() instanceof CallAction)
-				getPropz().logCallProb(allInState.getNextToAct(), p);
-			if (p.getAction() instanceof FoldAction)
-				getPropz().logFoldProb(allInState.getNextToAct(), p);
-			if (p.getAction() instanceof RaiseAction)
-				getPropz().logRaiseProb(allInState.getNextToAct(), p);
-			if (p.getAction() instanceof CheckAction)
-				getPropz().logCheckProb(allInState.getNextToAct(), p);
-			if (p.getAction() instanceof BetAction)
-				getPropz().logBetProb(allInState.getNextToAct(), p);
+			if (p != null) {
+				if (p.getAction() instanceof CallAction)
+					getPropz().logCallProb(allInState.getNextToAct(), p);
+				if (p.getAction() instanceof FoldAction)
+					getPropz().logFoldProb(allInState.getNextToAct(), p);
+				if (p.getAction() instanceof RaiseAction)
+					getPropz().logRaiseProb(allInState.getNextToAct(), p);
+				if (p.getAction() instanceof CheckAction)
+					getPropz().logCheckProb(allInState.getNextToAct(), p);
+				if (p.getAction() instanceof BetAction)
+					getPropz().logBetProb(allInState.getNextToAct(), p);
+			}
 			
 			logger.trace(getPlayerName(allInState) +
 				" All-in " + Util.parseDollars(allInState.getEvent().getMovedAmount()) + 

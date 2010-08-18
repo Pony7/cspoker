@@ -272,12 +272,13 @@ public class ARFFPlayer {
 	
 	private void incrementWriteCounter() {
 		writeCounter++;
-		System.out.println(
-				preCheckBetFile.getAccuracy() + "\t" + preCheckBetFile.getWindowSize() + "\t" + 
-				postCheckBetFile.getAccuracy() + "\t" + postCheckBetFile.getWindowSize() + "\t" +
-				preFoldCallRaiseFile.getAccuracy() + "\t" + preFoldCallRaiseFile.getWindowSize() + "\t" + 
-				postFoldCallRaiseFile.getAccuracy() + "\t" + postFoldCallRaiseFile.getWindowSize() + "\t" + 
-				showdownFile.getAccuracy() + "\t" + showdownFile.getWindowSize());
+		String str = "";
+		str += preCheckBetFile.getAccuracy() + "\t" + preCheckBetFile.getWindowSize() + "\t"; 
+		str += postCheckBetFile.getAccuracy() + "\t" + postCheckBetFile.getWindowSize() + "\t";
+		str += preFoldCallRaiseFile.getAccuracy() + "\t" + preFoldCallRaiseFile.getWindowSize() + "\t";
+		str += postFoldCallRaiseFile.getAccuracy() + "\t" + postFoldCallRaiseFile.getWindowSize() + "\t"; 
+//		str += showdownFile.getAccuracy() + "\t" + showdownFile.getWindowSize()
+		System.out.println(str);
 //		System.out.println("=" + writeCounter + "=");
 	}
 }

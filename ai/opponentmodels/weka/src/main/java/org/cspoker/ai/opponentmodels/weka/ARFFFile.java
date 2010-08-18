@@ -28,9 +28,12 @@ public class ARFFFile {
 	private Instances instances;
 	private ArrayList<Prediction> predictions;
 	private M5P cl = null;
-
+	
+	private boolean echo = false;
+	
 	public ARFFFile(String path, Object player, String name, String attributes,
 			WekaOptions config) throws Exception {
+//		if (name.equals("PreFoldCallRaise.arff")) echo = true;
 		this.path = path;
 		this.player = player;
 		this.name = name;
@@ -47,6 +50,11 @@ public class ARFFFile {
 	    instances.delete();
 	    
 	    predictions = new ArrayList<Prediction>();
+	    
+	    // initiate accuracies
+	    for (int i = 0; i < MAX_DECREASE; i++) {
+			accuracies[i] = -1;
+		}
 	}
 
 //	private double countDataLines() {
@@ -92,8 +100,6 @@ public class ARFFFile {
 			file.write(instance.toString() + nl);
 			file.flush();
 			instances.add(instance);
-//			if (count != instances.numInstances())
-//				System.err.println("PROBLEM");
 			adjustWindow();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
@@ -101,6 +107,9 @@ public class ARFFFile {
 	}
 	
 	public void addPrediction(Prediction p) {
+//		if (echo) System.out.println("Adding " + p);
+		for (int i = 0; i < instances.numInstances() - predictions.size()-1; i++)
+			predictions.add(null);
 		predictions.add(p);
 	}
 	
@@ -127,22 +136,60 @@ public class ARFFFile {
 				(trueNegative + truePositive + falseNegative + falsePositive);
 	}
 	
-	private double prevAcc = 0.0;
+	private final int MAX_DECREASE = 10;
+	private double[] accuracies = new double[MAX_DECREASE];
+	private int currentDecrease = 0;
 	
 	private boolean decreasingAcc(double accuracy) {
-		double diffAcc = accuracy - prevAcc;
-		prevAcc = accuracy;
-		return (diffAcc < -0.01);
+		currentDecrease++;
+		if (currentDecrease > MAX_DECREASE) {
+			for (int i = 0; i < MAX_DECREASE - 1; i++) {
+				accuracies[i] = accuracies[i+1];
+			}
+			accuracies[MAX_DECREASE - 1] = accuracy;
+		} else 
+			accuracies[currentDecrease - 1] = accuracy;
+		
+		double slope = calculateLeastSquaresSlope(accuracies);
+		
+		return (slope < 0);
 	}
+	
+	private double calculateLeastSquaresSlope(double[] accuracies) {
+		double n = accuracies.length;
+		double sumY = 0.0;
+		double sumX = 0.0;
+		double sumXY = 0.0;
+		double sumX2 = 0.0;
+		for (int i = 0; i < accuracies.length; i++) {
+			if (echo) System.out.print(accuracies[i] + ", ");
+			if (accuracies[i] != -1) {
+				sumY += accuracies[i];
+				sumX += i;
+				sumXY += i*accuracies[i];
+				sumX2 += i * i;
+			}
+		}
+		
+		double slope = ((n * sumXY) - (sumX * sumY)) / ((n * sumX2) - (sumX * sumX));
+		double intercept = (sumY - (sumX * slope)) / n;
+		if (echo) System.out.print("slope: " + slope + ", intercept: " + intercept);
+		if (echo) System.out.println("");
+		
+		return slope;
+	}
+
+	private boolean printed = false;
 	
 	private void adjustWindow() {
 		if (cl == null) return;
 		double windowSize = instances.numInstances();
 		double coverage = windowSize / cl.measureNumRules();
 		double accuracy = getAccuracy();
+		boolean decreasing = decreasingAcc(accuracy);
 		double l;
 		if ((coverage < config.getCdLowCoverage()) ||
-				(accuracy < config.getCdAccuracy() && decreasingAcc(accuracy)))
+				(accuracy < config.getCdAccuracy() && decreasing))
 			l = Math.round(0.2 *  windowSize);
 		else if (coverage > 2 * config.getCdHighCoverage() &&
 				accuracy > config.getCdAccuracy())
@@ -152,6 +199,14 @@ public class ARFFFile {
 			l = 1;
 		else
 			l = 0;
+		
+		if (echo && !printed) {
+			System.out.println("L \t Accuracy \t Coverage \t Instances \t Decreasing");
+			printed = true;
+		}
+		
+		if (echo) 
+			System.out.println(l + "\t" + accuracy + "\t" + coverage + "\t" + windowSize + "\t" + decreasing);
 		
 		for (int i = 0; i < l; i++) {
 			instances.delete(0);
