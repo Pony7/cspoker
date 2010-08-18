@@ -1,6 +1,7 @@
 package org.cspoker.ai.opponentmodels.weka;
 
 import java.io.*;
+import java.util.ArrayList;
 
 import org.cspoker.ai.opponentmodels.weka.instances.InstancesBuilder;
 
@@ -23,9 +24,13 @@ public class ARFFFile {
 	private Writer file;
 	private long count = 0;
 	private WekaOptions config;
+	
+	private Instances instances;
+	private ArrayList<Prediction> predictions;
+	private M5P cl = null;
 
 	public ARFFFile(String path, Object player, String name, String attributes,
-			WekaOptions config) throws IOException {
+			WekaOptions config) throws Exception {
 		this.path = path;
 		this.player = player;
 		this.name = name;
@@ -35,6 +40,13 @@ public class ARFFFile {
 		file = new BufferedWriter(new FileWriter(path + player + name, false));
 		file.write(attributes);
 		file.flush();
+		
+		DataSource source = new DataSource(path + player + name);
+	    instances = source.getDataSet();
+	    // make it clean
+	    instances.delete();
+	    
+	    predictions = new ArrayList<Prediction>();
 	}
 
 //	private double countDataLines() {
@@ -79,11 +91,78 @@ public class ARFFFile {
 			count++;
 			file.write(instance.toString() + nl);
 			file.flush();
+			instances.add(instance);
+//			if (count != instances.numInstances())
+//				System.err.println("PROBLEM");
+			adjustWindow();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		} 
 	}
-
+	
+	public void addPrediction(Prediction p) {
+		predictions.add(p);
+	}
+	
+	public double getWindowSize() {
+		return instances.numInstances();
+	}
+	
+	public double getAccuracy() {
+		if (predictions.isEmpty()) return 0.0;
+		double truePositive = 0.0;
+		double trueNegative = 0.0;
+		double falsePositive = 0.0;
+		double falseNegative = 0.0;
+		for (int i = 0; i < predictions.size(); i++) {
+			Prediction p = predictions.get(i);
+			if (p != null) {
+				truePositive += p.getTruePositive();
+				trueNegative += p.getTrueNegative();
+				falsePositive += p.getFalsePositive();
+				falseNegative += p.getFalseNegative();
+			}
+		}
+		return (trueNegative + truePositive) / 
+				(trueNegative + truePositive + falseNegative + falsePositive);
+	}
+	
+	private double prevAcc = 0.0;
+	
+	private boolean decreasingAcc(double accuracy) {
+		double diffAcc = accuracy - prevAcc;
+		prevAcc = accuracy;
+		return (diffAcc < -0.01);
+	}
+	
+	private void adjustWindow() {
+		if (cl == null) return;
+		double windowSize = instances.numInstances();
+		double coverage = windowSize / cl.measureNumRules();
+		double accuracy = getAccuracy();
+		double l;
+		if ((coverage < config.getCdLowCoverage()) ||
+				(accuracy < config.getCdAccuracy() && decreasingAcc(accuracy)))
+			l = Math.round(0.2 *  windowSize);
+		else if (coverage > 2 * config.getCdHighCoverage() &&
+				accuracy > config.getCdAccuracy())
+			l = 2;
+		else if (coverage > config.getCdHighCoverage() &&
+				accuracy > config.getCdAccuracy())
+			l = 1;
+		else
+			l = 0;
+		
+		for (int i = 0; i < l; i++) {
+			instances.delete(0);
+			if (!predictions.isEmpty())
+				predictions.remove(0);
+		}
+		
+//		windowSize = windowSize - l;
+//		System.out.println(name + ", " + windowSize + ", l: " + l + ", acc: " + accuracy + ", coverage: " + coverage);
+	}
+	
 	public boolean isModelReady() {
 		return count > config.getMinimalLearnExamples();
 	}
@@ -98,9 +177,13 @@ public class ARFFFile {
 	
 	public Classifier createModel(String fileName, String attribute, String[] rmAttributes) throws Exception {
 //		System.out.println("Creating model for " + player + name);
-		DataSource source = new DataSource(path + player + name);
-//		System.out.println(source + " > " + path + player + name);
-	    Instances data = source.getDataSet();
+		Instances data;
+		if (config.solveConceptDrift())
+			data = instances;
+		else {
+			DataSource source = new DataSource(path + player + name);
+		    data = source.getDataSet();
+		}
 	    if (rmAttributes.length > 0) {
 		    String[] optionsDel = new String[2];
 			optionsDel[0] = "-R";                                   
@@ -118,12 +201,16 @@ public class ARFFFile {
 	    	data.setClass(data.attribute(attribute));
 	    
 	    // train M5P
-	    M5P cl = new M5P();
+	    cl = new M5P();
 	    cl.setBuildRegressionTree(true);
 	    cl.setUnpruned(false);
 	    cl.setUseUnsmoothed(false);
 	    // further options...
 	    cl.buildClassifier(data);
+	    
+//	    System.out.println("Number of instances: " + data.numInstances());
+//	    System.out.println("Number of measures: " + cl.measureNumRules());
+//	    System.out.println(cl);
 	    
 	    // save model + header
 	    if (config.modelPersistency())

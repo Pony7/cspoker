@@ -3,6 +3,7 @@ package org.cspoker.ai.opponentmodels.weka;
 import java.io.*;
 
 import org.apache.log4j.Logger;
+import org.cspoker.common.elements.player.PlayerId;
 
 import weka.core.Instance;
 
@@ -24,16 +25,19 @@ public class ARFFPlayer {
 	
 	private WekaRegressionModel model = null;
 	private WekaOptions config = new WekaOptions();
+	private ActionTrackingVisitor actions = null;
 	
 	private long writeCounter = 0;
 	
-	public ARFFPlayer(Object player, WekaRegressionModel baseModel, WekaOptions config) {
+	public ARFFPlayer(Object player, WekaRegressionModel baseModel, WekaOptions config,
+			ActionTrackingVisitor actions) {
 		if (!config.useOnlineLearning()) 
 			throw new IllegalStateException("ARFFPlayer can only be used with online learning!");
 		
 		this.player = player;
 		this.config = config;	
 		this.model = baseModel;
+		this.actions = actions;
 		
 		try {
 			String path = (getClass().getProtectionDomain().getCodeSource()
@@ -51,6 +55,8 @@ public class ARFFPlayer {
 					ARFFPropositionalizer.getShowdownInstance().toString(), config);
 		} catch (IOException io) {
 			throw new RuntimeException(io);
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to create set of instances");
 		}
 	}
 
@@ -69,6 +75,11 @@ public class ARFFPlayer {
 			"(learning examples: " + file.getNrExamples() + 
 			" < " + config.getMinimalLearnExamples() + " required)";
 	}
+	
+	public double getAccuracy() {
+		return actions.getAccuracy((PlayerId) player);
+	}
+	
 	public void learnNewModel() {
 //		if (!(preCheckBetFile.isModelReady() && postCheckBetFile.isModelReady() && preFoldCallRaiseFile.isModelReady() 
 //				&& postFoldCallRaiseFile.isModelReady() && showdownFile.isModelReady())) {
@@ -110,6 +121,10 @@ public class ARFFPlayer {
 	public boolean modelCreated() {
 		return modelCreated;
 	}
+
+	public void addPreCheckBetPrediction(Prediction p) {
+		preCheckBetFile.addPrediction(p);		
+	}
 	
 	public void writePreCheckBet(Instance instance) {
 		if (writeAllowed()) {
@@ -132,6 +147,10 @@ public class ARFFPlayer {
 			e.printStackTrace();
 		}
 	}
+
+	public void addPostCheckBetPrediction(Prediction p) {
+		postCheckBetFile.addPrediction(p);		
+	}
 	
 	public void writePostCheckBet(Instance instance) {
 		if (writeAllowed()) {
@@ -153,6 +172,10 @@ public class ARFFPlayer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void addPreFoldCallRaisePrediction(Prediction p) {
+		preFoldCallRaiseFile.addPrediction(p);		
 	}
 	
 	public void writePreFoldCallRaise(Instance instance) {
@@ -181,6 +204,10 @@ public class ARFFPlayer {
 		}
 	}
 
+	public void addPostFoldCallRaisePrediction(Prediction p) {
+		postFoldCallRaiseFile.addPrediction(p);		
+	}
+
 	public void writePostFoldCallRaise(Instance instance) {
 		if (writeAllowed()) {
 			postFoldCallRaiseFile.write(instance);
@@ -205,7 +232,10 @@ public class ARFFPlayer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
 
+	public void addShowdownPrediction(Prediction p) {
+		showdownFile.addPrediction(p);		
 	}
 
 	public void writeShowdown(Instance instance) {
@@ -242,6 +272,12 @@ public class ARFFPlayer {
 	
 	private void incrementWriteCounter() {
 		writeCounter++;
+		System.out.println(
+				preCheckBetFile.getAccuracy() + "\t" + preCheckBetFile.getWindowSize() + "\t" + 
+				postCheckBetFile.getAccuracy() + "\t" + postCheckBetFile.getWindowSize() + "\t" +
+				preFoldCallRaiseFile.getAccuracy() + "\t" + preFoldCallRaiseFile.getWindowSize() + "\t" + 
+				postFoldCallRaiseFile.getAccuracy() + "\t" + postFoldCallRaiseFile.getWindowSize() + "\t" + 
+				showdownFile.getAccuracy() + "\t" + showdownFile.getWindowSize());
 //		System.out.println("=" + writeCounter + "=");
 	}
 }

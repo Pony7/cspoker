@@ -15,6 +15,9 @@ import org.cspoker.common.elements.player.PlayerId;
 import org.cspoker.common.util.Util;
 
 import org.cspoker.ai.bots.bot.gametree.action.BetAction;
+import org.cspoker.ai.bots.bot.gametree.action.CallAction;
+import org.cspoker.ai.bots.bot.gametree.action.CheckAction;
+import org.cspoker.ai.bots.bot.gametree.action.FoldAction;
 import org.cspoker.ai.bots.bot.gametree.action.RaiseAction;
 import org.cspoker.ai.bots.bot.gametree.action.SearchBotAction;
 import org.cspoker.ai.bots.bot.gametree.mcts.nodes.INode;
@@ -220,7 +223,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		data.trueNegative += p.getTrueNegative();
 		data.falsePositive += p.getFalsePositive();
 		data.falseNegative += p.getFalseNegative();
-		printAccuracy();
+//		printAccuracy();
 	}
 	
 	public double getAccuracy(PlayerId id) {
@@ -238,6 +241,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		if (node != null && !callState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(callState);
 			assimilatePrediction(callState.getNextToAct(), p);
+			getPropz().logCallProb(callState.getNextToAct(), p);
 			logger.trace(getPlayerName(callState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(callState) + " CallState");
@@ -251,6 +255,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		if (node != null && !raiseState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(raiseState,raiseState.getLargestBet());
 			assimilatePrediction(raiseState.getNextToAct(), p);
+			getPropz().logRaiseProb(raiseState.getNextToAct(), p);
 			logger.trace(getPlayerName(raiseState) +
 				" Raise " + Util.parseDollars(raiseState.getLargestBet()) + 
 				" - with <" + p + ">");
@@ -266,6 +271,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		if (node != null && !foldState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(foldState);
 			assimilatePrediction(foldState.getNextToAct(), p);
+			getPropz().logFoldProb(foldState.getNextToAct(), p);
 			logger.trace(getPlayerName(foldState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(foldState) + " FoldState");
@@ -279,6 +285,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		if (node != null && !checkState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(checkState);
 			assimilatePrediction(checkState.getNextToAct(), p);
+			getPropz().logCheckProb(checkState.getNextToAct(), p);
 			logger.trace(getPlayerName(checkState) + " " + p);
 		} else {
 			logger.trace(getPlayerName(checkState) + " CheckState");
@@ -292,6 +299,7 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		if (node != null && !betState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(betState, betState.getEvent().getAmount());
 			assimilatePrediction(betState.getNextToAct(), p);
+			getPropz().logBetProb(betState.getNextToAct(), p);
 			logger.trace(getPlayerName(betState) +
 				" Bet " + Util.parseDollars(betState.getEvent().getAmount()) + 
 				" - with <" + p + ">");
@@ -307,6 +315,18 @@ public class ActionTrackingVisitor extends PlayerTrackingVisitor {
 		if (node != null && !allInState.getNextToAct().equals(parentOpponentModel.getBotId())) {
 			Prediction p = getProbability(allInState, allInState.getEvent().getMovedAmount());
 			assimilatePrediction(allInState.getNextToAct(), p);
+			
+			if (p.getAction() instanceof CallAction)
+				getPropz().logCallProb(allInState.getNextToAct(), p);
+			if (p.getAction() instanceof FoldAction)
+				getPropz().logFoldProb(allInState.getNextToAct(), p);
+			if (p.getAction() instanceof RaiseAction)
+				getPropz().logRaiseProb(allInState.getNextToAct(), p);
+			if (p.getAction() instanceof CheckAction)
+				getPropz().logCheckProb(allInState.getNextToAct(), p);
+			if (p.getAction() instanceof BetAction)
+				getPropz().logBetProb(allInState.getNextToAct(), p);
+			
 			logger.trace(getPlayerName(allInState) +
 				" All-in " + Util.parseDollars(allInState.getEvent().getMovedAmount()) + 
 				" - with <" + p + ">");

@@ -107,7 +107,8 @@ public class WekaLearningModel implements OpponentModel {
 			model = new WekaRegressionModel(defaultModel);
 			if (config.useOnlineLearning() && !actor.equals(bot)) {
 				opponentModels.put(actor, model);
-				actionTrackingVisitor.getPropz().addPlayer(actor, new ARFFPlayer(actor, model, config));
+				actionTrackingVisitor.getPropz().addPlayer(actor, 
+						new ARFFPlayer(actor, model, config, actionTrackingVisitor));
 			}
 		}
 		return model;
