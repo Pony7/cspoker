@@ -111,7 +111,15 @@ public class ARFFPropositionalizer extends Propositionalizer {
 		}
 	}
 
-
+	protected void logFoldProb(Object actorId, Prediction p) {
+		if (actorId.equals(bot)) return;
+		if (getRound().equals("preflop")) {
+			getARFF(actorId).addPreFoldCallRaisePrediction(p);
+		} else {
+			getARFF(actorId).addPostFoldCallRaisePrediction(p);
+		}
+	}
+	
 	@Override
 	protected void logCall(Object actorId) {
 		if (actorId.equals(bot)) return;
@@ -123,6 +131,15 @@ public class ARFFPropositionalizer extends Propositionalizer {
 			getARFF(actorId).writePostFoldCallRaise(
 					postFoldCallRaiseInstance.getClassifiedInstance(this,
 							actorId, new Object[] { 0, 1, 0, "call" }));
+		}
+	}
+
+	protected void logCallProb(Object actorId, Prediction p) {
+		if (actorId.equals(bot)) return;
+		if (getRound().equals("preflop")) {
+			getARFF(actorId).addPreFoldCallRaisePrediction(p);
+		} else {
+			getARFF(actorId).addPostFoldCallRaisePrediction(p);
 		}
 	}
 
@@ -140,6 +157,15 @@ public class ARFFPropositionalizer extends Propositionalizer {
 		}
 	}
 
+	protected void logRaiseProb(Object actorId, Prediction p) {
+		if (actorId.equals(bot)) return;
+		if (getRound().equals("preflop")) {
+			getARFF(actorId).addPreFoldCallRaisePrediction(p);
+		} else {
+			getARFF(actorId).addPostFoldCallRaisePrediction(p);
+		}
+	}
+
 	@Override
 	protected void logCheck(Object actorId) {
 		if (actorId.equals(bot)) return;
@@ -151,6 +177,15 @@ public class ARFFPropositionalizer extends Propositionalizer {
 			getARFF(actorId).writePostCheckBet(
 					postCheckBetInstance.getClassifiedInstance(this, actorId,
 							new Object[] { 0, "check" }));
+		}
+	}
+
+	protected void logCheckProb(Object actorId, Prediction p) {
+		if (actorId.equals(bot)) return;
+		if (getRound().equals("preflop")) {
+			getARFF(actorId).addPreCheckBetPrediction(p);
+		} else {
+			getARFF(actorId).addPostCheckBetPrediction(p);
 		}
 	}
 
@@ -168,6 +203,15 @@ public class ARFFPropositionalizer extends Propositionalizer {
 		}
 	}
 
+	protected void logBetProb(Object actorId, Prediction p) {
+		if (actorId.equals(bot)) return;
+		if (getRound().equals("preflop")) {
+			getARFF(actorId).addPreCheckBetPrediction(p);
+		} else {
+			getARFF(actorId).addPostCheckBetPrediction(p);
+		}
+	}
+
 	@Override
 	protected void logShowdown(Object actorId, double[] partitionDistr) {
 		if (actorId.equals(bot)) return;
@@ -180,5 +224,10 @@ public class ARFFPropositionalizer extends Propositionalizer {
 		targets[partitionDistr.length] = (int) Math.round(avgBucket);
 		getARFF(actorId).writeShowdown(
 				showdownInstance.getClassifiedInstance(this, actorId, targets));
+	}
+
+	protected void logShowdownProb(Object actorId, Prediction p) {
+		if (actorId.equals(bot)) return;
+		getARFF(actorId).addShowdownPrediction(p);
 	}
 }

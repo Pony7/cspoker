@@ -13,6 +13,9 @@ public class WekaOptions {
 	
 	/** continuousLearning must be true for using solveConceptDrift */
 	private boolean solveConceptDrift = true;
+	private double cdHighCoverage = 50;
+	private double cdLowCoverage = 1;
+	private double cdAccuracy = 0.5;
 	/** if solveConceptDrift is false, a new model must be learned at intervals
 	 * based on the number of reported actions	*/
 	private long learningInterval = 1;
@@ -97,5 +100,29 @@ public class WekaOptions {
 
 	public void setModelPersistency(boolean modelPersistency) {
 		this.modelPersistency = modelPersistency;
+	}
+
+	public double getCdHighCoverage() {
+		return cdHighCoverage;
+	}
+
+	public void setCdHighCoverage(double cdHighCoverage) {
+		this.cdHighCoverage = cdHighCoverage;
+	}
+
+	public double getCdLowCoverage() {
+		return cdLowCoverage;
+	}
+
+	public void setCdLowCoverage(double cdLowCoverage) {
+		this.cdLowCoverage = cdLowCoverage;
+	}
+
+	public double getCdAccuracy() {
+		return cdAccuracy;
+	}
+
+	public void setCdAccuracy(double cdAccuracy) {
+		this.cdAccuracy = cdAccuracy;
 	}
 }

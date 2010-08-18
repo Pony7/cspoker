@@ -107,7 +107,7 @@ public class BotRunner implements LobbyListener {
 	public static void create(RemoteCSPokerServer cspokerServer) {	
 		kullbackLeibler = new KullbackLeiblerListener(reportInterval); 	
 //		new BotRunner(cspokerServer, "bucketSampler0.01VsRulebots");
-		new BotRunner(cspokerServer, "NaiveBotsAccuracy2", getBots());
+		new BotRunner(cspokerServer, "test", getBots());
 	}
 	
 	public static BotFactory[] getBots() {
@@ -123,8 +123,8 @@ public class BotRunner implements LobbyListener {
 			configNoPersist.setUseOnlineLearning(false);
 			
 			WekaOptions configPersist = new WekaOptions();
-			configPersist.setContinuousLearning(false);
-			configPersist.setModelCreationTreshold(3000);
+			configPersist.setContinuousLearning(true);
+			configPersist.setModelCreationTreshold(800);
 			configPersist.setContinueAfterCreation(false);
 			
 			Sampler s = new BucketSampler(0.01);
@@ -133,9 +133,10 @@ public class BotRunner implements LobbyListener {
 //			Sampler s = new RandomSampler(9);
 			
 			return new BotFactory[] {
-				new CallBotFactory("CallBot"), // 62% precision, 71% accuracy
-				new CardBotFactory("CardBot"), // 60% precision, 71% accuracy
-				new HandBotFactory("HandBot"), // 41% accuracy
+				new AlternatingBotFactory("AlternatingBot"), // 62% precision, 71% accuracy
+//				new CallBotFactory("CallBot"), // 62% precision, 71% accuracy
+//				new CardBotFactory("CardBot"), // 60% precision, 71% accuracy
+//				new HandBotFactory("HandBot"), // 41% accuracy
 //				new FixedSampleMCTSBotFactory("MCTSBot",
 //						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip",
 //								configNoPersist),
@@ -169,7 +170,7 @@ public class BotRunner implements LobbyListener {
 						new MCTSShowdownRollOutNode.Factory(),
 						new SampleWeightedBackPropStrategy.Factory(),
 						s,
-						500
+						250
 				),
 //				new SearchBotFactory( // 42,5% accuracy
 //						WekaRegressionModelFactory.createForZip("org/cspoker/ai/opponentmodels/weka/models/model1.zip", configNoPersist),
