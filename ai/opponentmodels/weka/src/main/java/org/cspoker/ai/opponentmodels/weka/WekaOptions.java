@@ -15,7 +15,7 @@ public class WekaOptions {
 	private boolean solveConceptDrift = true;
 	private double cdHighCoverage = 50;
 	private double cdLowCoverage = 1;
-	private double cdAccuracy = 0.7;
+	private double cdAccuracy = 0.8;
 	/** if solveConceptDrift is false, a new model must be learned at intervals
 	 * based on the number of reported actions	*/
 	private long learningInterval = 1;

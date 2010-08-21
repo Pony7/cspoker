@@ -136,7 +136,7 @@ public class ARFFFile {
 				(trueNegative + truePositive + falseNegative + falsePositive);
 	}
 	
-	private final int MAX_DECREASE = 10;
+	private final int MAX_DECREASE = 20;
 	private double[] accuracies = new double[MAX_DECREASE];
 	private int currentDecrease = 0;
 	
