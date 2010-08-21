@@ -64,8 +64,8 @@ public class CSVLogListener extends DealCountingListener {
 			if (deals == 1)
 				overallStartTime = startTime;
 			if (startTime > 0) {
-//				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
-//						/ (nowTime - startTime) + " games/s");
+				logger.info("deal #" + deals + " at " + reportInterval * 1000.0
+						/ (nowTime - startTime) + " games/s");
 				try {
 					file.write(deals+"");
 				} catch (IOException e) {
