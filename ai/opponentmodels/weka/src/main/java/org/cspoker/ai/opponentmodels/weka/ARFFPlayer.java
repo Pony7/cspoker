@@ -1,6 +1,8 @@
 package org.cspoker.ai.opponentmodels.weka;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.cspoker.common.elements.player.PlayerId;
@@ -40,8 +42,21 @@ public class ARFFPlayer {
 		this.actions = actions;
 		
 		try {
-			String path = (getClass().getProtectionDomain().getCodeSource()
-				.getLocation().getPath() + folder).replace("%20", " ");
+			// Begin new code -- can be better
+			URL codeSource =
+				getClass().getProtectionDomain().getCodeSource().getLocation();
+			File f = new File(codeSource.toURI());
+			while (!f.isDirectory()) {
+				f = f.getParentFile();
+				if (f == null) {
+					throw new IOException("Cannot find location for ARFFFiles");
+				}
+			}
+			String path = f.getAbsolutePath();
+			// End new code
+			// String path = (getClass().getProtectionDomain().getCodeSource()
+			//    .getLocation().getPath() + folder).replace("%20", " ");
+			// End old code
 			
 			preCheckBetFile = new ARFFFile(path, player, "PreCheckBet.arff",
 					ARFFPropositionalizer.getPreCheckBetInstance().toString(), config);
