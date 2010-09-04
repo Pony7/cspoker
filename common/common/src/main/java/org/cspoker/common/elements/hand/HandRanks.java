@@ -17,10 +17,9 @@
 package org.cspoker.common.elements.hand;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,12 +73,13 @@ public final class HandRanks {
 		longDescriptionMap.put(handInfo, longDescription);
 	}
 
-	private void loadHandRanks() {		
+	private void loadHandRanks() {
+		final InputStream in = this		
+			.getClass()		
+			.getClassLoader()		
+			.getResourceAsStream(		
+			"org/cspoker/common/elements/hand/handRanks.txt");
 		try {
-			FileInputStream fstream = new FileInputStream(getClass().getProtectionDomain().
-					getCodeSource().getLocation().getPath().replace("%20"," ") +
-					"../../src/main/resources/org/cspoker/common/elements/hand/handRanks.txt");
-		    DataInputStream in = new DataInputStream(fstream);
 			final BufferedReader bufferedReader = new BufferedReader(
 					new InputStreamReader(in));
 
