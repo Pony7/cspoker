@@ -26,16 +26,15 @@ import net.jcip.annotations.NotThreadSafe;
 import org.apache.log4j.Logger;
 import org.cspoker.ai.bots.bot.Bot;
 import org.cspoker.ai.bots.bot.BotFactory;
-import org.cspoker.ai.bots.bot.gametree.mcts.*;
-import org.cspoker.ai.bots.bot.gametree.mcts.listeners.SWTTreeListener;
-import org.cspoker.ai.bots.bot.gametree.mcts.listeners.TextTreeListener;
-import org.cspoker.ai.bots.bot.gametree.mcts.nodes.*;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.*;
-import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.*;
-import org.cspoker.ai.bots.bot.gametree.rollout.*;
-import org.cspoker.ai.bots.bot.gametree.search.*;
-import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.*;
-import org.cspoker.ai.bots.bot.rule.*;
+import org.cspoker.ai.bots.bot.gametree.mcts.MCTSBotFactory;
+import org.cspoker.ai.bots.bot.gametree.mcts.nodes.MCTSShowdownRollOutNode;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.backpropagation.SampleWeightedBackPropStrategy;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.MaxValueSelector;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingSelector;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.SamplingToFunctionSelector;
+import org.cspoker.ai.bots.bot.gametree.mcts.strategies.selection.UCTSelector;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.BucketSampler;
+import org.cspoker.ai.bots.bot.gametree.search.expander.sampling.Sampler;
 import org.cspoker.ai.bots.listener.BotListener;
 import org.cspoker.ai.bots.listener.CSVLogListener;
 import org.cspoker.ai.bots.listener.GameLimitingBotListener;
@@ -59,7 +58,6 @@ import org.cspoker.common.elements.table.TableId;
 import org.cspoker.common.util.Log4JPropertiesLoader;
 import org.cspoker.common.util.threading.GlobalThreadPool;
 import org.cspoker.common.util.threading.SingleThreadRequestExecutor;
-import org.eclipse.swt.widgets.Display;
 
 @NotThreadSafe
 public class BotRunner implements LobbyListener {
