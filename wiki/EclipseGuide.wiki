@@ -4,7 +4,7 @@
 = Maven Plugin =
 There are too many projects in CSPoker to import them all manually in to your IDE. Most IDE's have a Maven plugin that will make life easier for you. For Eclipse this is [http://m2eclipse.codehaus.org/ m2eclipse]. Install it with the Eclipse update manager from the update url:
 {{{
-http://m2eclipse.sonatype.org/update-dev/
+http://m2eclipse.sonatype.org/sites/m2e
 }}}
 
 = Setting Up Projects =
