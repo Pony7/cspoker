@@ -1,6 +1,8 @@
 package org.cspoker.ai.bots.bot.gametree.tls.nodes;
 
-public class LeafNode extends AbstractTLSNode {
+public class LeafNode extends InnerNode {
+	
+	public AbstractTree childTree;
 
 	public LeafNode(AbstractTLSNode parent) {
 		super(parent);
@@ -10,6 +12,10 @@ public class LeafNode extends AbstractTLSNode {
 	public AbstractTLSNode selectChild() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void expand(){
+		
 	}
 
 }

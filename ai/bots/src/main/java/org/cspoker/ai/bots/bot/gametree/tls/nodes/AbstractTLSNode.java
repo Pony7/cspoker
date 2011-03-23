@@ -23,10 +23,6 @@ public abstract class AbstractTLSNode {
 
 	public AbstractTLSNode getParent() {
 		return parent;
-	}	
-	
-	protected void split(){
-		
 	}
 
 
