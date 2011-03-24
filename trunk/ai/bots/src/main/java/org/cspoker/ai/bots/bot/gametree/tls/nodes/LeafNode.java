@@ -2,7 +2,7 @@ package org.cspoker.ai.bots.bot.gametree.tls.nodes;
 
 public class LeafNode extends InnerNode {
 	
-	public AbstractTree childTree;
+	public TLSTree childTree;
 
 	public LeafNode(AbstractTLSNode parent) {
 		super(parent);

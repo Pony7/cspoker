@@ -2,9 +2,9 @@ package org.cspoker.ai.bots.bot.gametree.tls.nodes;
 
 public class RootNode extends AbstractTLSNode {
 	
-	public final AbstractTree tree;
+	public final TLSTree tree;
 
-	public RootNode(AbstractTree tree) {
+	public RootNode(TLSTree tree) {
 		super(null);
 		this.tree = tree;
 		this.leftChild = new LeafNode(this);
