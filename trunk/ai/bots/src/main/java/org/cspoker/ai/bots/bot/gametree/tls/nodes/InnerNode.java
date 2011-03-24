@@ -11,10 +11,5 @@ public class InnerNode extends AbstractTLSNode {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public void split(){
-		getParent().leftChild = new LeafNode(getParent());
-		getParent().rightChild = new LeafNode(getParent());
-	}
 
 }
